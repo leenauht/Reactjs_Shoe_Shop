@@ -1,4 +1,8 @@
-export default function Cart({ cart, openModal, closeModal }) {
+import { useState } from "react";
+
+export default function Cart({ cart, onClickUpdateQty }) {
+  const [isOpen, setIsOpen] = useState(false);
+
   const handleRenderProduct = () => {
     const content = cart.map((product) => {
       return (
@@ -12,7 +16,10 @@ export default function Cart({ cart, openModal, closeModal }) {
           <td className="px-6 py-4">{product.name}</td>
           <td className="px-6 py-4">
             <div className="inline-block mr-1">
-              <button className="p-1 bg-red-500 text-white rounded-full">
+              <button
+                onClick={() => onClickUpdateQty(product.id, false)}
+                className="p-1 bg-red-500 text-white rounded-full"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="20"
@@ -28,7 +35,10 @@ export default function Cart({ cart, openModal, closeModal }) {
             </div>
             {product.purchaseQuantity}
             <div className="inline-block ml-1">
-              <button className="p-1 bg-blue-500 text-white rounded-full">
+              <button
+                onClick={() => onClickUpdateQty(product.id, true)}
+                className="p-1 bg-blue-500 text-white rounded-full"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="20"
@@ -57,16 +67,34 @@ export default function Cart({ cart, openModal, closeModal }) {
     return content;
   };
 
+  const totalQty = () => {
+    // let total = 0;
+    // cart.forEach((item) => (total += item.purchaseQuantity));
+    // return total;
+
+    return cart.reduce(
+      (total, product) => (total += product.purchaseQuantity),
+      0
+    );
+  };
+
   return (
-    <>
-      {openModal && (
+    <div>
+      <button
+        onClick={() => setIsOpen(true)}
+        className="px-4 py-2 mb-4 rounded-xl text-white bg-blue-600"
+      >
+        Cart ({totalQty()})
+      </button>
+
+      {isOpen && (
         <div className="modal-overlay fixed top-0 left-0 w-full h-full bg-bg-overlay flex justify-center items-center">
           <div className="max-w-[960px] max-h-[700px] rounded-lg bg-white overflow-y-auto">
             {/* Modal header */}
             <div className="flex items-center justify-between p-4 relative">
               <h3 className=" text-2xl font-medium">Cart</h3>
               <button
-                onClick={() => closeModal(false)}
+                onClick={() => setIsOpen(false)}
                 type="button"
                 className="absolute top-2 right-2 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
               >
@@ -121,7 +149,7 @@ export default function Cart({ cart, openModal, closeModal }) {
             {/* Modal footer */}
             <div className="flex items-center justify-end p-4 md:p-5 border-t border-gray-200">
               <button
-                onClick={() => closeModal(false)}
+                onClick={() => setIsOpen(false)}
                 data-modal-hide="default-modal"
                 type="button"
                 className="rounded-lg text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium text-sm px-5 py-2.5 text-center"
@@ -132,6 +160,6 @@ export default function Cart({ cart, openModal, closeModal }) {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 }

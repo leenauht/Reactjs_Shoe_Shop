@@ -6,7 +6,7 @@ export default function Modal({ product, openModal, closeModal }) {
       {openModal && product && (
         <div className="modal-overlay fixed top-0 left-0 w-full h-full flex items-center justify-center bg-bg-overlay">
           <div className="max-w-[960px]">
-            <div className="items-center justify-between p-4 md:p-5 rounded-lg bg-bg-modal my-10 relative">
+            <div className="items-center justify-between p-4 md:p-5 rounded-lg bg-white my-10 relative">
               <button
                 onClick={() => closeModal(false)}
                 type="button"
